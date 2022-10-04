@@ -1,50 +1,52 @@
 #include "main.h"
 #include <stdlib.h>
-#include <stdio.h>
 
 /**
- * _strlen - find length of a string
- * @s: string
- * Return: the length
- */
-int _strlen(char *s)
-{
-	int size = 0;
-	for (; s[size] != '\0'; size++)
-		;
-	return (size);
-}
-
-/**
- * *argstostr - concatenates all the arguments
- * @ac: counts
- * @av: arguments
- * Return: a pointer to a string
+ * argstostr - concatenates all the arguments of a program.
+ * @ac: argument count.
+ * @av: argument vector.
+ *
+ * Return: pointer of an array of char
  */
 char *argstostr(int ac, char **av)
 {
-	int i = 0, nc = 0, j = 0, cmpt = 0;
-	char *s;
+	char *aout;
+	int c, i, j, ia;
 
-	if (ac == 0 || av == NULL)
+	if (ac == 0)
 		return (NULL);
 
-	for (; i < ac; i++, nc++)
-		nc += _strlen(av[i]);
-
-	s = malloc(sizeof(char) * nc + 1);
-	if (s == 0)
-		return (NULL);
-
-	for (i = 0; i < ac; i++)
+	for (c = i = 0; i < ac; i++)
 	{
-		for (j = 0; av[i][j] != '\0'; j++, cmpt++)
-			s[cmpt] = av[i][j];
+		if (av[i] == NULL)
+			return (NULL);
 
-		s[cmpt] = '\n';
-		cmpt++;
+		for (j = 0; av[i][j] != '\0'; j++)
+			c++;
+		c++;
 	}
-	s[cmpt] = '\0';
 
-	return (s);
+	aout = malloc((c + 1) * sizeof(char));
+
+	if (aout == NULL)
+	{
+		free(aout);
+		return (NULL);
+	}
+
+	for (i = j = ia = 0; ia < c; j++, ia++)
+	{
+		if (av[i][j] == '\0')
+		{
+			aout[ia] = '\n';
+			i++;
+			ia++;
+			j = 0;
+		}
+		if (ia < c - 1)
+			aout[ia] = av[i][j];
+	}
+	aout[ia] = '\0';
+
+	return (aout);
 }
